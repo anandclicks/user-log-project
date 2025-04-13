@@ -3,5 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
-Route::get('/register',        [UserController::class, 'index'])->name("register.view");
+Route::view('/',                       'welcome')->name('/');
+Route::get('/register',        [UserController::class, 'registerPage'])->name("register.view");
 Route::post('/register-user',  [UserController::class, 'RegisterUser'])->name('user.register');
+Route::get('/login',           [UserController::class,  'loginPage'])->name('login.view');
+Route::post('/login-user',      [UserController::class,  'LoginUser'])->name('user.login');

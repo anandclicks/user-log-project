@@ -3,25 +3,19 @@
 
 <div class="h-[100vh] w-[100vw] flex items-center justify-center">
     <div class="left w-[30%] h-[100%] flex items-center">
-        <form onsubmit="registerUser(event)" class=" flex flex-col gap-2 p-5 registerForm">
-            <h1 class="text-2xl mb-3">Sign-up Your Account</h1>
+        <form onsubmit="loginUser(event)" class=" flex flex-col gap-2 p-5 loginForm">
+            <h1 class="text-2xl mb-3">Login Your Account</h1>
             @csrf
-            <input type="text" name="name"
-                class=" border-[1px] outline-0 border-stone-300 p-2 rounded-lg h-[40px] w-[320px]" placeholder="Enter Name">
             <input type="text" name="email"
                 class=" border-[1px] outline-0 border-stone-300 p-2 rounded-lg h-[40px] w-[320px]" placeholder="Enter Email">
-            <input type="text" name="number"
-                class=" border-[1px] outline-0 border-stone-300 p-2 rounded-lg h-[40px] w-[320px]"
-                placeholder="Enter Number">
             <input type="text" name="password"
-                class=" border-[1px] outline-0 border-stone-300 p-2 rounded-lg h-[40px] w-[320px]"
-                placeholder="Enter Password">
-    
+                class=" border-[1px] outline-0 border-stone-300 p-2 rounded-lg h-[40px] w-[320px]" placeholder="Enter Password">
+            
             <div class="w-full flex justify-end">
-                <p>Go For <a class="text-blue-500" href="{{route('login.view')}}">Login</a></p>
+                <p>Create A New <a class="text-blue-500" href="{{route('register.view')}}">Account</a></p>
             </div>
     
-            <input type="submit" value="Sign-up"
+            <input type="submit" value="Login"
                 class="w-full bg-purple-700 rounded-2xl text-white h-[40px] flex items-center justify-center cursor-pointer">
         </form>
     </div>
@@ -40,35 +34,33 @@
     <link href="
     https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.min.css
     " rel="stylesheet">
-<script>
 
-    function registerUser(event) {
+
+<script>
+    function loginUser(event){
         event.preventDefault();
-        let formVal = $('.registerForm').serialize()
-        
+        let finalData = $('.loginForm').serialize();
+
         $.ajax({
-            url: '{{ route('user.register') }}',
-            type: 'POST',
-            data: formVal,
+            url : '{{route('user.login')}}',
+            type : 'post',
+            data : finalData,
             success : function(res){
                 if(res.success){
-                    Swal.fire({
-                        icon : 'success',
-                        title : "Registered Successful!",
-                    }).then(()=> $('.registerForm')[0].reset()).then(()=> window.open('{{route('login.view')}}', '_self'));
+                   window.open('{{route('/')}}', '_self')
                 }else {
                     Swal.fire({
                         icon : 'warning',
-                        title : res.message ?? "Something Is Wrong!",
-                    });
-                }
-            },
-            error : function(xhr){
-                    Swal.fire({
-                        icon : "error",
-                        title : xhr.responseText ?? 'Internal Server Error!'
+                        title : res.message ?? 'Something is wrong!'
                     })
                 }
+            },
+            error : function(err){
+                Swal.fire({
+                    icon : 'error',
+                    title : err.responseText ?? 'Internal Server Error!'
+                })
+            }
         })
     }
 </script>
