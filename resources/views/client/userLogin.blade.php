@@ -23,9 +23,9 @@
                 class="w-full bg-purple-700 rounded-2xl text-white h-[40px] flex items-center justify-center cursor-pointer">
         </form>
     </div>
-    {{-- <div class="right w-[30%] h-[100%] flex items-center">
+    <div class="right w-[30%] h-[100%] flex items-center">
         <img class="h-[80%] w-full bg-cover rounded-2xl" src="https://images.unsplash.com/photo-1619045119136-349759036541?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHVycGxlJTIwYWVzdGhldGljfGVufDB8fDB8fHww" alt="">
-    </div> --}}
+    </div>
     @if (session('error'))
     {{-- @dd('ddd') --}}
         <script>
@@ -52,16 +52,18 @@
                 if(res.success){
                    window.open('{{route('/')}}', '_self')
                 }else {
+                    console.log(res)
                     Swal.fire({
-                        icon : 'warning',
+                        icon : 'error',
                         title : res.message ?? 'Something is wrong!'
                     })
                 }
             },
             error : function(err){
+                console.log(err)
                 Swal.fire({
                     icon : 'error',
-                    title : err.responseText ?? 'Internal Server Error!'
+                    title : err.responseJSON.message ?? 'Internal Server Error!'
                 })
             }
         })

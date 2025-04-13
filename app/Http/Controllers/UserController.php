@@ -80,6 +80,11 @@ class UserController extends Controller
             'message' => 'User Loggedin!',
             'user'    => $isUserExist->makeHidden('password'),
         ],200);
+       }else {
+        return response()->json([
+            'success' => false,
+            'message' => 'Password Is Wrong!',
+        ],401);
        }
        
     }
