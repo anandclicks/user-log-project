@@ -24,10 +24,7 @@
     <body>
     @if(Auth::check())
     <h1>Welcome {{Auth::user()->name}}</h1>
-    @else 
-    <script>
-        window.open('/login','_self')
-    </script>
+    
     @endif
         @if(session('success'))
         <script>
