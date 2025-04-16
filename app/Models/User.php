@@ -3,6 +3,7 @@
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model; 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Models\Posts;
 
 class User extends Authenticatable
 {
@@ -13,4 +14,8 @@ class User extends Authenticatable
         'password',
     ];
 
+    function user(){
+      return $this->belongsTo(Posts::class);
+    }
 }
+
