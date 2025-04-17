@@ -59,7 +59,7 @@
                     })
                 }
             },
-            error : function(err){
+            error : function(err, xhr){
                 console.log(err)
                 Swal.fire({
                     icon : 'error',

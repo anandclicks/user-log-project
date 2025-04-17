@@ -8,6 +8,9 @@
 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css"
+    integrity="sha512-kJlvECunwXftkPwyvHbclArO8wszgBGisiLeuDFwNM8ws+wKIw0sv1os3ClWZOcrEB2eRXULYUsm8OVRGJKwGA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <style>
     * {
@@ -20,84 +23,176 @@
     @if (session('success'))
         <script>
             Swal.fire({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
                 icon: 'success',
-                title: 'Logged In!!'
+                title: 'Logged in Succesfull!',
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
             })
         </script>
     @endif
 
     <div class="">
-       <div class="row w-full h-[90px] flex justify-end p-2">
-        <div class="user_card w-[200px] h-full shadow rounded-2xl flex items-center gap-3 justify-center">
-            <img class="h-[60px] w-[60px] rounded-full"
-                src="https://cdn.vectorstock.com/i/500p/62/34/user-profile-icon-anonymous-person-symbol-blank-vector-53216234.jpg"
-                alt="">
-            <div>
-                @if (!empty($user))
-                    <h2 class="m-0 leading-5">Hello, <br> <b class="text-purple-500">{{ $user['name'] }}!</b></h2>
-                    {{-- <small><a class="text-red-700" href="">Logout</a></small> --}}
-                @else
-                    <p><a href="{{ route('login.view') }}" class="text-green-700" href="">Login Account</a></p>
-                @endif
+        <div class="row w-full h-[90px] flex justify-between p-2 items-center ">
+            <div
+                class="closeCreatePost bg-purple-600 rounded-2xl h-[40px] w-[150px] flex justify-center items-center text-white cursor-pointer gap-2 text-sm">
+                <i class="ri-quill-pen-ai-line"></i> Create Post
             </div>
 
+            <div class="user_card w-[200px] h-full shadow rounded-2xl flex items-center gap-3 justify-center">
+                <img class="h-[60px] w-[60px] rounded-full"
+                    src="https://cdn.vectorstock.com/i/500p/62/34/user-profile-icon-anonymous-person-symbol-blank-vector-53216234.jpg"
+                    alt="">
+                <div>
+                    @if (!empty($user))
+                        <h2 class="m-0 leading-5">Hello, <br> <b class="text-purple-500">{{ $user['name'] }}!</b></h2>
+                        {{-- <small><a class="text-red-700" href="">Logout</a></small> --}}
+                    @else
+                        <p><a href="{{ route('login.view') }}" class="text-green-700" href="">Login Account</a>
+                        </p>
+                    @endif
+                </div>
+
+            </div>
         </div>
-       </div>
 
         {{-- create post  --}}
-       
-        <form  enctype="multipart/form-data" onsubmit="createPost(event)" class="hidden flex flex-col gap-2 p-5 createPost w-[300px]">
-            <h1 class="text-2xl mb-3">Create Post</h1>
-            @csrf
-            <input type="text" name="title"
-                class=" border-[1px] outline-0 border-stone-300 p-2 rounded-lg h-[40px] " placeholder="Enter Title">
-            <textarea type="text" name="deps"
-                class=" border-[1px] outline-0 border-stone-300 p-2 rounded-lg h-[150px] " placeholder="Enter Descripton"></textarea>
-            <input type="file" class=" border-[1px] outline-0 border-stone-300 p-2 rounded-lg h-[40px]" name="image">
-    
-            <input type="submit" value="Post"
-                class="w-full bg-purple-700 rounded-2xl text-white h-[40px] flex items-center justify-center cursor-pointer">
-        </form>
 
-        <div class="allPosts px-3 flex gap-3 flex-wrap">
-           @foreach($posts as $post)
-           <div class="card h-[320px] p-2 w-[250px] shadow rounded-2xl">
-            <img class="w-full h-[150px] object-cover rounded-2xl" src="/storage/{{$post['image']}}" alt="">
+        <div
+            class="hidden post_wrapper h-[100vh] w-[100vw] absolute top-0 left-0 bg-[#00000022] flex items-center justify-center">
+            <form enctype="multipart/form-data" onsubmit="createPost(event)"
+                class="bg-white relative shadow rounded-xl flex flex-col gap-2 p-5 createPost w-[400px]">
+                <i class="ri-close-large-line closeCreatePost absolute top-0 right-0 text-2xl cursor-pointer m-2"></i>
 
-            <div class="flex flex-col justify-between h-[150px]">
-               <div>
-                <h3 class="text-xl mt-2">{{$post['title']}}</h3>
-                <p class="leading-5 mt-2">{{Str::substr($post['deps'],0, 100)}}...</p>
-               </div>
-               <div class="pt-2">
-                <small>{{ \Carbon\Carbon::parse('2025-04-16 19:47:27')->format('F j, Y g:i A') }}</small>
-               </div>
-            </div>
+                <h1 class="text-2xl mb-3">Create Post</h1>
+                @csrf
+                {{-- priveiw image  --}}
+                <div
+                    class=" h-[250px] w-full card flex justify-center bg-stone-200 rounded-xl relative overflow-hidden">
+                    <input type="file" accept="image/*"
+                        class="imageInput absolute cursor-pointer top-0 z-30 left-0 opacity-0 h-full w-full border-[1px] outline-0 border-stone-300 p-2 rounded-lg "
+                        name="image">
+                    <img class="h-full w-auto object-contain previmg z-20" src="" alt="">
+                    <p class="absolute h-full flex items-center">Upload Image</p>
+                </div>
+                <textarea type="text" name="deps"
+                    class=" text-sm border-[1px] outline-0 border-stone-300 p-2 rounded-lg h-[70px] " placeholder="Your Thoughts...!"></textarea>
+              
+
+                <input type="submit" value="Post"
+                    class="w-full bg-purple-700 rounded-2xl text-white h-[40px] flex items-center justify-center cursor-pointer image">
+            </form>
         </div>
-           @endforeach
+
+        <div class="allPosts px-3 flex gap-3 items-center flex-wrap">
+            @foreach ($posts as $post)
+                <div class="card h-min-[400px] p-2 w-[300px] shadow rounded-2xl ">
+                    <div class="pt-2 flex gap-2 items-center mb-2">
+                        <i class="ri-user-line text-3xl"></i>
+                       <div>
+                        <p class="leading-2">{{$post->user?->name ?? 'Known User'}}</p>
+                        <small>{{ \Carbon\Carbon::parse($post['created_at'])->timezone('Asia/Kolkata')->format('F j, Y g:i A') }}</small>
+                       </div>
+                    </div>
+
+                    <div class="w-full flex justify-center">
+                        <img class="w-auto h-[300px] object-cover rounded-2xl" src="/storage/{{ $post['image'] }}"
+                            alt="">
+                    </div>
+
+                    <div class="flex flex-col justify-between mt-2">
+                        <div>
+                            <p class="leading-5 mt-2">{{$post['deps']}}</p>
+                        </div>
+                        
+                    </div>
+                </div>
+            @endforeach
         </div>
     </div>
 
     <script>
-       function createPost(evt){
-        evt.preventDefault()
-        let data = $('.createPost')[0];
-        data = new FormData(data)
-        $.ajax({
-            url : "{{route('create.post')}}",
-            type : 'POST',
-            data : data,
-            contentType : false,
-            processData : false,
-            success : function(res){
-                console.log(res);
-            },
-            error : function(res){
-                console.log(res);
-                
+        function createPost(evt) {
+            evt.preventDefault()
+            let data = $('.createPost')[0];
+            data = new FormData(data)
+            $.ajax({
+                url: "{{ route('create.post') }}",
+                type: 'POST',
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function(res) {
+                    if (!res.success) {
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            icon: 'info',
+                            title: res.message,
+                            didOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            }
+                        });
+                    }
+                    if (res.success) {
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            icon: 'success',
+                            title: res.message,
+                            didOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            }
+                        }).then(() => {
+                            $('.post_wrapper')[0].classList.add('hidden')
+                        });
+                    }
+                },
+                error: function(res) {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        icon: 'info',
+                        title: res.responseJSON.message ?? 'Internal server error!',
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    });
+                }
+            })
+        }
+
+        $(".imageInput").change(function(event) {
+            let imageUrl = URL.createObjectURL(event.target.files[0])
+            $('.previmg')[0].src = imageUrl
+            console.log($('.previmg')[0]);
+        })
+
+        $('.closeCreatePost').click(function() {
+            if ($('.post_wrapper')[0].classList.contains('hidden')) {
+                $('.post_wrapper')[0].classList.remove('hidden')
+            } else {
+                $('.post_wrapper')[0].classList.add('hidden')
             }
         })
-       }
     </script>
 
 </body>

@@ -20,7 +20,7 @@ class UserController extends Controller
     }
     function showHomePage(){
         $user = Auth::user()?->except('password');
-        $allPost = Posts::where('user_id',$user)->get();
+        $allPost = Posts::latest()->get();
         return view('welcome',['user' => $user ?? [], 'posts' => $allPost ?? []]);
     }
 
@@ -97,7 +97,6 @@ class UserController extends Controller
 
     function CreatePost(Request $request){
         $validate = Validator::make($request->all(),[
-            'title' => 'required|string',
             'deps'  => 'required|string',
             'image' => 'required|mimes:png,jpeg,jpg'
         ]);
@@ -119,7 +118,6 @@ class UserController extends Controller
         }
         $user_Id = Auth::user()?->id;
         $post = Posts::create([
-            'title' => $request->title,
             'deps'  => $request->deps,
             'image' => $imagePath,
             'user_id' => $user_Id
