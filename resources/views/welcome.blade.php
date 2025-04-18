@@ -16,6 +16,11 @@
     * {
         font-family: Arial, Helvetica, sans-serif;
     }
+    .prevent-select {
+  -webkit-user-select: none; 
+  -ms-user-select: none; 
+  user-select: none; 
+}
 </style>
 
 <body>
@@ -65,7 +70,7 @@
         {{-- create post  --}}
 
         <div
-            class="hidden post_wrapper h-[100vh] w-[100vw] absolute top-0 left-0 bg-[#00000022] flex items-center justify-center">
+            class="hidden post_wrapper h-[100vh] w-[100vw] absolute top-0 left-0 bg-[#00000022] flex items-center justify-center z-50">
             <form enctype="multipart/form-data" onsubmit="createPost(event)"
                 class="bg-white relative shadow rounded-xl flex flex-col gap-2 p-5 createPost w-[400px]">
                 <i class="ri-close-large-line closeCreatePost absolute top-0 right-0 text-2xl cursor-pointer m-2"></i>
@@ -93,11 +98,29 @@
         <div class="allPosts px-3 flex gap-3 items-center flex-wrap">
             @foreach ($posts as $post)
                 <div class="card h-min-[400px] p-2 w-[300px] shadow rounded-2xl ">
-                    <div class="pt-2 flex gap-2 items-center mb-2">
+                    <div class="pt-2 flex gap-2 items-center justify-between mb-2">
+                       <div class="flex gap-2 items-center">
                         <i class="ri-user-line text-3xl"></i>
-                       <div>
-                        <p class="leading-2">{{$post->user?->name ?? 'Known User'}}</p>
-                        <small>{{ \Carbon\Carbon::parse($post['created_at'])->timezone('Asia/Kolkata')->format('F j, Y g:i A') }}</small>
+                        <div>
+                         <p class="leading-2">{{$post->user?->name ?? 'Known User'}}</p>
+                         <small>{{ \Carbon\Carbon::parse($post['created_at'])->timezone('Asia/Kolkata')->format('F j, Y g:i A') }}</small>
+                        </div>
+                       </div>
+                       <div class="relative">
+                           <i class="ri-more-2-line cursor-pointer actionShowBtn"></i>
+                           <div class="absolute actionBtnWrapper top-5 right-0 min-h-[40px] w-[100px] shadow bg-white rounded-xl flex p-3 gap-2 justify-center flex-col prevent-select hidden">
+                            <small copyUrl="{{URL::to('/posts/' . base64_encode($post['id']))}}" class="sharePost cursor-pointer">
+                                <i class="ri-share-fill"></i> Share
+                            </small>
+                            @if(Auth::user()->id == $post['user_id'])
+                            <small class="editPost cursor-pointer">
+                                <i class="ri-pencil-fill"></i> Edit
+                            </small>
+                            <small class="deletePost cursor-pointer">
+                                <i class="ri-delete-bin-6-line"></i> Delete
+                            </small>
+                            @endif
+                           </div>
                        </div>
                     </div>
 
@@ -192,6 +215,29 @@
             } else {
                 $('.post_wrapper')[0].classList.add('hidden')
             }
+        })
+        $('.actionShowBtn').click(function(evt){
+            evt.target.classList.toggle('ri-more-2-line')
+            evt.target.classList.toggle('ri-close-large-line')
+            let el = evt.target.nextElementSibling
+            el.select
+            el.classList.contains('hidden') ? el.classList.remove('hidden') : el.classList.add('hidden')
+        })
+        $('.sharePost').click(function(evt){
+            $('.actionBtnWrapper').each(function () {
+                this.classList.add('hidden');
+            })
+            let urlForCopy = evt.target.getAttribute('copyUrl')
+            navigator.clipboard.writeText(urlForCopy).then(()=>
+            Swal.fire({
+                toast : true,
+                position : 'top-end',
+                showConfirmButton : false,
+                timer : 2000,
+                icon : 'success',
+                title : 'Url Cpoied!',
+            })
+        );
         })
     </script>
 
