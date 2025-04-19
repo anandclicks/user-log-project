@@ -109,7 +109,7 @@
                        <div class="relative">
                            <i class="ri-more-2-line cursor-pointer actionShowBtn"></i>
                            <div class="absolute actionBtnWrapper top-5 right-0 min-h-[40px] w-[100px] shadow bg-white rounded-xl flex p-3 gap-2 justify-center flex-col prevent-select hidden">
-                            <small copyUrl="{{URL::to('/posts/' . base64_encode($post['id']))}}" class="sharePost cursor-pointer">
+                            <small copyUrl="{{URL::to('/posts/' . bin2hex($post['id']))}}" class="sharePost cursor-pointer">
                                 <i class="ri-share-fill"></i> Share
                             </small>
                             @if(Auth::user()->id == $post['user_id'])
