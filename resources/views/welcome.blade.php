@@ -16,11 +16,12 @@
     * {
         font-family: Arial, Helvetica, sans-serif;
     }
+
     .prevent-select {
-  -webkit-user-select: none; 
-  -ms-user-select: none; 
-  user-select: none; 
-}
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
 </style>
 
 <body>
@@ -88,7 +89,7 @@
                 </div>
                 <textarea type="text" name="deps"
                     class=" text-sm border-[1px] outline-0 border-stone-300 p-2 rounded-lg h-[70px] " placeholder="Your Thoughts...!"></textarea>
-              
+
 
                 <input type="submit" value="Post"
                     class="w-full bg-purple-700 rounded-2xl text-white h-[40px] flex items-center justify-center cursor-pointer image">
@@ -99,29 +100,31 @@
             @foreach ($posts as $post)
                 <div class="card h-min-[400px] p-2 w-[300px] shadow rounded-2xl ">
                     <div class="pt-2 flex gap-2 items-center justify-between mb-2">
-                       <div class="flex gap-2 items-center">
-                        <i class="ri-user-line text-3xl"></i>
-                        <div>
-                         <p class="leading-2">{{$post->user?->name ?? 'Known User'}}</p>
-                         <small>{{ \Carbon\Carbon::parse($post['created_at'])->timezone('Asia/Kolkata')->format('F j, Y g:i A') }}</small>
+                        <div class="flex gap-2 items-center">
+                            <i class="ri-user-line text-3xl"></i>
+                            <div>
+                                <p class="leading-2">{{ $post->user?->name ?? 'Known User' }}</p>
+                                <small>{{ \Carbon\Carbon::parse($post['created_at'])->timezone('Asia/Kolkata')->format('F j, Y g:i A') }}</small>
+                            </div>
                         </div>
-                       </div>
-                       <div class="relative">
-                           <i class="ri-more-2-line cursor-pointer actionShowBtn"></i>
-                           <div class="absolute actionBtnWrapper top-5 right-0 min-h-[40px] w-[100px] shadow bg-white rounded-xl flex p-3 gap-2 justify-center flex-col prevent-select hidden">
-                            <small copyUrl="{{URL::to('/posts/' . bin2hex($post['id']))}}" class="sharePost cursor-pointer">
-                                <i class="ri-share-fill"></i> Share
-                            </small>
-                            @if(Auth::user()->id == $post['user_id'])
-                            <small class="editPost cursor-pointer">
-                                <i class="ri-pencil-fill"></i> Edit
-                            </small>
-                            <small class="deletePost cursor-pointer">
-                                <i class="ri-delete-bin-6-line"></i> Delete
-                            </small>
-                            @endif
-                           </div>
-                       </div>
+                        <div class="relative">
+                            <i class="ri-more-2-line cursor-pointer actionShowBtn"></i>
+                            <div
+                                class="absolute actionBtnWrapper top-5 right-0 min-h-[40px] w-[100px] shadow bg-white rounded-xl flex p-3 gap-2 justify-center flex-col prevent-select hidden">
+                                <small copyUrl="{{ URL::to('/posts/' . encrypt($post['id'])) }}"
+                                    class="sharePost cursor-pointer">
+                                    <i class="ri-share-fill"></i> Share
+                                </small>
+                                @if (Auth::user()->id == $post['user_id'])
+                                    <small class="editPost cursor-pointer">
+                                        <i class="ri-pencil-fill"></i> Edit
+                                    </small>
+                                    <small class="deletePost cursor-pointer">
+                                        <i class="ri-delete-bin-6-line"></i> Delete
+                                    </small>
+                                @endif
+                            </div>
+                        </div>
                     </div>
 
                     <div class="w-full flex justify-center">
@@ -131,9 +134,9 @@
 
                     <div class="flex flex-col justify-between mt-2">
                         <div>
-                            <p class="leading-5 mt-2">{{$post['deps']}}</p>
+                            <p class="leading-5 mt-2">{{ $post['deps'] }}</p>
                         </div>
-                        
+
                     </div>
                 </div>
             @endforeach
@@ -202,13 +205,11 @@
                 }
             })
         }
-
         $(".imageInput").change(function(event) {
             let imageUrl = URL.createObjectURL(event.target.files[0])
             $('.previmg')[0].src = imageUrl
             console.log($('.previmg')[0]);
         })
-
         $('.closeCreatePost').click(function() {
             if ($('.post_wrapper')[0].classList.contains('hidden')) {
                 $('.post_wrapper')[0].classList.remove('hidden')
@@ -216,28 +217,32 @@
                 $('.post_wrapper')[0].classList.add('hidden')
             }
         })
-        $('.actionShowBtn').click(function(evt){
+        $('.actionShowBtn').click(function(evt) {
             evt.target.classList.toggle('ri-more-2-line')
             evt.target.classList.toggle('ri-close-large-line')
             let el = evt.target.nextElementSibling
             el.select
             el.classList.contains('hidden') ? el.classList.remove('hidden') : el.classList.add('hidden')
         })
-        $('.sharePost').click(function(evt){
-            $('.actionBtnWrapper').each(function () {
+        $('.sharePost').click(function(evt) {
+            $('.actionBtnWrapper').each(function() {
                 this.classList.add('hidden');
             })
-            let urlForCopy = evt.target.getAttribute('copyUrl')
-            navigator.clipboard.writeText(urlForCopy).then(()=>
-            Swal.fire({
-                toast : true,
-                position : 'top-end',
-                showConfirmButton : false,
-                timer : 2000,
-                icon : 'success',
-                title : 'Url Cpoied!',
+            $('.actionShowBtn').each(function() {
+                this.classList.add('ri-more-2-line')
+                this.classList.remove('ri-close-large-line')
             })
-        );
+            let urlForCopy = evt.target.getAttribute('copyUrl')
+            navigator.clipboard.writeText(urlForCopy).then(() =>
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    icon: 'success',
+                    title: 'Url Cpoied!',
+                })
+            );
         })
     </script>
 
