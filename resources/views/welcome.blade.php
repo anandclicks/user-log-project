@@ -248,6 +248,11 @@
             );
         })
        function editPost(post_id){
+        $('.actionShowBtn').each(function() {
+                this.classList.add('ri-more-2-line')
+                this.classList.remove('ri-close-large-line')
+            })
+            $('.actionBtnWrapper').addClass('hidden')
         if(post_id){
                 $('.post_id').val(post_id)
             }

@@ -102,21 +102,11 @@ class UserController extends Controller
             ],401);
         }
         
-        $validate = Validator::make($request->all(),[
-            'deps'  => 'required|string',
-            'image' => 'required|mimes:png,jpeg,jpg',
-        ]);
-        if($validate->fails()){
-            return response()->json([
-                'message' => $validate->errors()->first(),
-                'status'  => false
-            ]);
-        }
 
         // checking for post exist or not 
         $post_id = $request?->post_id;
         if($post_id){
-            $imagePath = $request->file('image')->store('image', 'public');
+            $imagePath = $request->file('image')?->store('image', 'public');
             $want_to_update = Posts::find($post_id);
             $want_to_update->deps = $request->deps ?? $want_to_update->deps;
             $want_to_update->image = $imagePath ?? $want_to_update->image;
@@ -132,7 +122,16 @@ class UserController extends Controller
                 ],500);
             }
         }
-
+        $validate = Validator::make($request->all(),[
+            'deps'  => 'required|string',
+            'image' => 'required|mimes:png,jpeg,jpg',
+        ]);
+        if($validate->fails()){
+            return response()->json([
+                'message' => $validate->errors()->first(),
+                'status'  => false
+            ]);
+        }
         $imagePath = $request->file('image')->store('image', 'public');
         if(!$imagePath){
             return response()->json([
