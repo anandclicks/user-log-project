@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('deps');
             $table->string('image');
             $table->timestamps();
-            
         });
     }
 

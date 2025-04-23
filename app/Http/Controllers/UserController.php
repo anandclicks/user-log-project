@@ -96,16 +96,41 @@ class UserController extends Controller
     }
 
     function CreatePost(Request $request){
+        if(!Auth::check()){
+            response()->json([
+                'message' => 'You need to Login!',
+            ],401);
+        }
+        
         $validate = Validator::make($request->all(),[
             'deps'  => 'required|string',
-            'image' => 'required|mimes:png,jpeg,jpg'
+            'image' => 'required|mimes:png,jpeg,jpg',
         ]);
-
         if($validate->fails()){
             return response()->json([
                 'message' => $validate->errors()->first(),
                 'status'  => false
             ]);
+        }
+
+        // checking for post exist or not 
+        $post_id = $request?->post_id;
+        if($post_id){
+            $imagePath = $request->file('image')->store('image', 'public');
+            $want_to_update = Posts::find($post_id);
+            $want_to_update->deps = $request->deps ?? $want_to_update->deps;
+            $want_to_update->image = $imagePath ?? $want_to_update->image;
+            $status = $want_to_update->save();
+            if($status){
+                return response()->json([
+                    'message' => 'Post Updated!',
+                ],200);
+            }else {
+                return response()->json([
+                    'message' => 'Something is wrong!',
+                    'error'  => $status,
+                ],500);
+            }
         }
 
         $imagePath = $request->file('image')->store('image', 'public');

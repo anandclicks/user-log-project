@@ -74,6 +74,7 @@
             class="hidden post_wrapper h-[100vh] w-[100vw] absolute top-0 left-0 bg-[#00000022] flex items-center justify-center z-50">
             <form enctype="multipart/form-data" onsubmit="createPost(event)"
                 class="bg-white relative shadow rounded-xl flex flex-col gap-2 p-5 createPost w-[400px]">
+                <input type="hidden" name="post_id" class="post_id">
                 <i class="ri-close-large-line closeCreatePost absolute top-0 right-0 text-2xl cursor-pointer m-2"></i>
 
                 <h1 class="text-2xl mb-3">Create Post</h1>
@@ -84,6 +85,7 @@
                     <input type="file" accept="image/*"
                         class="imageInput absolute cursor-pointer top-0 z-30 left-0 opacity-0 h-full w-full border-[1px] outline-0 border-stone-300 p-2 rounded-lg "
                         name="image">
+                    <input type="hidden" name="post_id" class="post_id">
                     <img class="h-full w-auto object-contain previmg z-20" src="" alt="">
                     <p class="absolute h-full flex items-center">Upload Image</p>
                 </div>
@@ -111,12 +113,12 @@
                             <i class="ri-more-2-line cursor-pointer actionShowBtn"></i>
                             <div
                                 class="absolute actionBtnWrapper top-5 right-0 min-h-[40px] w-[100px] shadow bg-white rounded-xl flex p-3 gap-2 justify-center flex-col prevent-select hidden">
-                                <small copyUrl="{{ URL::to('/posts/' . encrypt($post['id'])) }}"
+                                <small copyUrl="{{ URL::to('/posts/' . encrypt($post['id'])) }}" @endphp
                                     class="sharePost cursor-pointer">
                                     <i class="ri-share-fill"></i> Share
                                 </small>
                                 @if (Auth::user()->id == $post['user_id'])
-                                    <small class="editPost cursor-pointer">
+                                    <small onclick="editPost({{$post['id']}})" class="editPost cursor-pointer">
                                         <i class="ri-pencil-fill"></i> Edit
                                     </small>
                                     <small class="deletePost cursor-pointer">
@@ -145,6 +147,7 @@
 
     <script>
         function createPost(evt) {
+
             evt.preventDefault()
             let data = $('.createPost')[0];
             data = new FormData(data)
@@ -244,6 +247,16 @@
                 })
             );
         })
+       function editPost(post_id){
+        if(post_id){
+                $('.post_id').val(post_id)
+            }
+            if ($('.post_wrapper')[0].classList.contains('hidden')) {
+                $('.post_wrapper')[0].classList.remove('hidden')
+            } else {
+                $('.post_wrapper')[0].classList.add('hidden')
+            }
+       }
     </script>
 
 </body>
