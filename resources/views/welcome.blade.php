@@ -67,17 +67,15 @@
 
             </div>
         </div>
-
         {{-- create post  --}}
-
         <div
-            class="hidden post_wrapper h-[100vh] w-[100vw] absolute top-0 left-0 bg-[#00000022] flex items-center justify-center z-50">
+            class="hidden post_wrapper h-[100vh] w-[100vw] absolute top-0 left-0 bg-[#00000053] flex items-center justify-center z-50">
             <form enctype="multipart/form-data" onsubmit="createPost(event)"
                 class="bg-white relative shadow rounded-xl flex flex-col gap-2 p-5 createPost w-[400px]">
                 <input type="hidden" name="post_id" class="post_id">
                 <i class="ri-close-large-line closeCreatePost absolute top-0 right-0 text-2xl cursor-pointer m-2"></i>
 
-                <h1 class="text-2xl mb-3">Create Post</h1>
+                <h1 class="text-2xl mb-3 createPostTitleAndBtn">Create Post</h1>
                 @csrf
                 {{-- priveiw image  --}}
                 <div
@@ -90,14 +88,12 @@
                     <p class="absolute h-full flex items-center">Upload Image</p>
                 </div>
                 <textarea type="text" name="deps"
-                    class=" text-sm border-[1px] outline-0 border-stone-300 p-2 rounded-lg h-[70px] " placeholder="Your Thoughts...!"></textarea>
-
-
+                    class="depsTextarea text-sm border-[1px] outline-0 border-stone-300 p-2 rounded-lg h-[70px] "
+                    placeholder="Your Thoughts...!"></textarea>
                 <input type="submit" value="Post"
-                    class="w-full bg-purple-700 rounded-2xl text-white h-[40px] flex items-center justify-center cursor-pointer image">
+                    class="createPostTitleAndBtn w-full bg-purple-700 rounded-2xl text-white h-[40px] flex items-center justify-center cursor-pointer image">
             </form>
         </div>
-
         <div class="allPosts px-3 flex gap-3 items-center flex-wrap">
             @foreach ($posts as $post)
                 <div class="card h-min-[400px] p-2 w-[300px] shadow rounded-2xl ">
@@ -118,7 +114,7 @@
                                     <i class="ri-share-fill"></i> Share
                                 </small>
                                 @if (Auth::user()->id == $post['user_id'])
-                                    <small onclick="editPost({{$post['id']}})" class="editPost cursor-pointer">
+                                    <small onclick="editPost({{ $post['id'] }})" class="editPost cursor-pointer">
                                         <i class="ri-pencil-fill"></i> Edit
                                     </small>
                                     <small class="deletePost cursor-pointer">
@@ -128,7 +124,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="w-full flex justify-center">
                         <img class="w-auto h-[300px] object-cover rounded-2xl" src="/storage/{{ $post['image'] }}"
                             alt="">
@@ -147,7 +142,6 @@
 
     <script>
         function createPost(evt) {
-
             evt.preventDefault()
             let data = $('.createPost')[0];
             data = new FormData(data)
@@ -163,7 +157,7 @@
                             toast: true,
                             position: 'top-end',
                             showConfirmButton: false,
-                            timer: 3000,
+                            timer: 2000,
                             timerProgressBar: true,
                             icon: 'info',
                             title: res.message,
@@ -174,11 +168,12 @@
                         });
                     }
                     if (res.success) {
+                        $('.post_wrapper')[0].classList.add('hidden')
                         Swal.fire({
                             toast: true,
                             position: 'top-end',
                             showConfirmButton: false,
-                            timer: 3000,
+                            timer: 2000,
                             timerProgressBar: true,
                             icon: 'success',
                             title: res.message,
@@ -186,9 +181,7 @@
                                 toast.addEventListener('mouseenter', Swal.stopTimer)
                                 toast.addEventListener('mouseleave', Swal.resumeTimer)
                             }
-                        }).then(() => {
-                            $('.post_wrapper')[0].classList.add('hidden')
-                        });
+                        })
                     }
                 },
                 error: function(res) {
@@ -196,7 +189,7 @@
                         toast: true,
                         position: 'top-end',
                         showConfirmButton: false,
-                        timer: 3000,
+                        timer: 2000,
                         timerProgressBar: true,
                         icon: 'info',
                         title: res.responseJSON.message ?? 'Internal server error!',
@@ -214,6 +207,9 @@
             console.log($('.previmg')[0]);
         })
         $('.closeCreatePost').click(function() {
+            $('.createPost')[0].reset()
+            $('.createPostTitleAndBtn').text('Create Post')
+            $('.previmg').attr('src', '')
             if ($('.post_wrapper')[0].classList.contains('hidden')) {
                 $('.post_wrapper')[0].classList.remove('hidden')
             } else {
@@ -247,13 +243,30 @@
                 })
             );
         })
-       function editPost(post_id){
-        $('.actionShowBtn').each(function() {
+        function editPost(post_id) {
+            $('.createPostTitleAndBtn').text('Edit Post')
+            $.ajax({
+                url: '{{ route('get.post') }}',
+                type: 'get',
+                data: {
+                    post_id
+                },
+                success: function(res) {
+                    if (res.status) {
+                        $(".previmg").attr('src', `/storage/${res.post.image}`)
+                        $(".depsTextarea").val(res.post.deps);
+                    }
+                },
+                error: function(err) {
+
+                }
+            })
+            $('.actionShowBtn').each(function() {
                 this.classList.add('ri-more-2-line')
                 this.classList.remove('ri-close-large-line')
             })
             $('.actionBtnWrapper').addClass('hidden')
-        if(post_id){
+            if (post_id) {
                 $('.post_id').val(post_id)
             }
             if ($('.post_wrapper')[0].classList.contains('hidden')) {
@@ -261,7 +274,7 @@
             } else {
                 $('.post_wrapper')[0].classList.add('hidden')
             }
-       }
+        }
     </script>
 
 </body>

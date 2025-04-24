@@ -23,9 +23,7 @@ class UserController extends Controller
         $allPost = Posts::latest()->get();
         return view('welcome',['user' => $user ?? [], 'posts' => $allPost ?? []]);
     }
-
     function RegisterUser(Request $request){
-        
         $validate = Validator::make($request->all(), [
             'name'     => 'required|min:3',
             'email'    => 'required|email|unique:users,email,',
@@ -56,7 +54,6 @@ class UserController extends Controller
         }
 
     }
-
     function LoginUser(Request $request){
         $validate = Validator::make($request->all(),[
             'email'    => 'required|exists:users,email',
@@ -94,10 +91,9 @@ class UserController extends Controller
        }
        
     }
-
     function CreatePost(Request $request){
         if(!Auth::check()){
-            response()->json([
+            return  response()->json([
                 'message' => 'You need to Login!',
             ],401);
         }
@@ -114,6 +110,7 @@ class UserController extends Controller
             if($status){
                 return response()->json([
                     'message' => 'Post Updated!',
+                    'success' => true
                 ],200);
             }else {
                 return response()->json([
@@ -163,5 +160,14 @@ class UserController extends Controller
             'success' => true
         ]);
     }
-    
+    function showExistingPostData(Request $request){
+        $id = $request->get('post_id');
+        $status = Posts::find($id);
+        if($status){
+            return response()->json([
+                'status' => true,
+                'post' => $status,
+            ]);
+        }
+    }
 }
