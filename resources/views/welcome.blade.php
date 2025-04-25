@@ -45,7 +45,7 @@
     @endif
 
     <div class="">
-        <div class="row w-full h-[90px] flex justify-between p-2 items-center ">
+        <div class="row w-full h-[90px] flex justify-between p-2 items-center fixed top-0 left-0">
             <div
                 class="closeCreatePost bg-purple-600 rounded-2xl h-[40px] w-[150px] flex justify-center items-center text-white cursor-pointer gap-2 text-sm">
                 <i class="ri-quill-pen-ai-line"></i> Create Post
@@ -94,56 +94,56 @@
                     class="createPostTitleAndBtn w-full bg-purple-700 rounded-2xl text-white h-[40px] flex items-center justify-center cursor-pointer image">
             </form>
         </div>
-        <div class="allPosts px-3 flex gap-3 items-center flex-wrap">
-            
-            @if(count($posts) >  0)
+
+        <div class="allPosts px-3 flex items-center gap-3 flex-col py-4">
+            @if (count($posts) > 0)
                 @foreach ($posts as $post)
-                <div class="card h-min-[400px] p-2 w-[300px] shadow rounded-2xl ">
-                    <div class="pt-2 flex gap-2 items-center justify-between mb-2">
-                        <div class="flex gap-2 items-center">
-                            <i class="ri-user-line text-3xl"></i>
+                    <div class="card h-min-[400px] p-2 w-[300px] shadow rounded-2xl ">
+                        <div class="pt-2 flex gap-2 items-center justify-between mb-2">
+                            <div class="flex gap-2 items-center">
+                                <i class="ri-user-line text-3xl"></i>
+                                <div>
+                                    <p class="leading-2">{{ $post->user?->name ?? 'Known User' }}</p>
+                                    <small>{{ \Carbon\Carbon::parse($post['created_at'])->timezone('Asia/Kolkata')->format('F j, Y g:i A') }}</small>
+                                </div>
+                            </div>
+                            <div class="relative">
+                                <i class="ri-more-2-line cursor-pointer actionShowBtn"></i>
+                                <div
+                                    class="absolute actionBtnWrapper top-5 right-0 min-h-[40px] w-[100px] shadow bg-white rounded-xl flex p-3 gap-2 justify-center flex-col prevent-select hidden">
+                                    <small copyUrl="{{ URL::to('/posts/' . encrypt($post['id'])) }}" @endphp
+                                        class="sharePost cursor-pointer">
+                                        <i class="ri-share-fill"></i> Share
+                                    </small>
+                                    @if (Auth::user()?->id == $post['user_id'])
+                                        <small onclick="editPost({{ $post['id'] }})" class="editPost cursor-pointer">
+                                            <i class="ri-pencil-fill"></i> Edit
+                                        </small>
+                                        <small onclick="deletePost('{{ $post['id'] }}')"
+                                            class="deletePost cursor-pointer">
+                                            <i class="ri-delete-bin-6-line"></i> Delete
+                                        </small>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-full flex justify-center">
+                            <img class="w-auto h-[300px] object-cover rounded-2xl" src="/storage/{{ $post['image'] }}"
+                                alt="">
+                        </div>
+
+                        <div class="flex flex-col justify-between mt-2">
                             <div>
-                                <p class="leading-2">{{ $post->user?->name ?? 'Known User' }}</p>
-                                <small>{{ \Carbon\Carbon::parse($post['created_at'])->timezone('Asia/Kolkata')->format('F j, Y g:i A') }}</small>
+                                <p class="leading-5 mt-2">{{ $post['deps'] }}</p>
                             </div>
-                        </div>
-                        <div class="relative">
-                            <i class="ri-more-2-line cursor-pointer actionShowBtn"></i>
-                            <div
-                                class="absolute actionBtnWrapper top-5 right-0 min-h-[40px] w-[100px] shadow bg-white rounded-xl flex p-3 gap-2 justify-center flex-col prevent-select hidden">
-                                <small copyUrl="{{ URL::to('/posts/' . encrypt($post['id'])) }}" @endphp
-                                    class="sharePost cursor-pointer">
-                                    <i class="ri-share-fill"></i> Share
-                                </small>
-                                @if (Auth::user()?->id == $post['user_id'])
-                                    <small onclick="editPost({{ $post['id'] }})" class="editPost cursor-pointer">
-                                        <i class="ri-pencil-fill"></i> Edit
-                                    </small>
-                                    <small onclick="deletePost('{{ $post['id'] }}')"
-                                        class="deletePost cursor-pointer">
-                                        <i class="ri-delete-bin-6-line"></i> Delete
-                                    </small>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                    <div class="w-full flex justify-center">
-                        <img class="w-auto h-[300px] object-cover rounded-2xl" src="/storage/{{ $post['image'] }}"
-                            alt="">
-                    </div>
 
-                    <div class="flex flex-col justify-between mt-2">
-                        <div>
-                            <p class="leading-5 mt-2">{{ $post['deps'] }}</p>
                         </div>
-
                     </div>
-                </div>
-            @endforeach
-            @else 
+                @endforeach
+            @else
                 <h2>No Post Found yet!</h2>
             @endif
-           
+
         </div>
     </div>
 
@@ -268,6 +268,7 @@
                 })
             );
         })
+
         function editPost(post_id) {
             $('.createPostTitleAndBtn').text('Edit Post')
             $.ajax({
@@ -300,6 +301,7 @@
                 $('.post_wrapper')[0].classList.add('hidden')
             }
         }
+
         function deletePost(post_id) {
             $('.actionBtnWrapper').each(function() {
                 this.classList.add('hidden');
