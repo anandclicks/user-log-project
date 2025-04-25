@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Flash;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Posts;
 
@@ -20,7 +21,7 @@ class UserController extends Controller
     }
     function showHomePage(){
         $user = Auth::user()?->except('password');
-        $allPost = Posts::latest()->get();
+        $allPost = Posts::where('deleted_at', null)->latest()->limit(10)->get();
         return view('welcome',['user' => $user ?? [], 'posts' => $allPost ?? []]);
     }
     function RegisterUser(Request $request){
@@ -95,6 +96,7 @@ class UserController extends Controller
         if(!Auth::check()){
             return  response()->json([
                 'message' => 'You need to Login!',
+                'success' => false
             ],401);
         }
         
@@ -121,7 +123,7 @@ class UserController extends Controller
         }
         $validate = Validator::make($request->all(),[
             'deps'  => 'required|string',
-            'image' => 'required|mimes:png,jpeg,jpg',
+            'image' => 'required|mimes:png,jpeg,jpg,webp',
         ]);
         if($validate->fails()){
             return response()->json([
@@ -169,5 +171,36 @@ class UserController extends Controller
                 'post' => $status,
             ]);
         }
+    }
+    function deletePost(Request $request){
+        $id = $request->get('post_id');
+        if(!$id){
+            return response()->json([
+                'message' => 'Post id is Required!',
+                'success' => false
+            ],401);
+        }
+        $post = Posts::find($id);
+        if(!$post){
+            return response()->json([
+                'message' => 'Post Not Found',
+                'status' => false
+            ]);
+        }
+
+          $post->deleted_at = Carbon::now();
+         $status = $post->save();
+        if($status){
+            return response()->json([
+                'message' => 'Post Deleted Successfully',
+                'success' =>true
+            ],200);
+        }else {
+            return response()->json([
+                'message' => 'Failed to delete post!',
+                'error'  => $status->error,
+            ],500);
+        }
+
     }
 }

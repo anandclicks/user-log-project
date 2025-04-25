@@ -69,7 +69,7 @@
         </div>
         {{-- create post  --}}
         <div
-            class="hidden post_wrapper h-[100vh] w-[100vw] absolute top-0 left-0 bg-[#00000053] flex items-center justify-center z-50">
+            class="hidden post_wrapper h-[100vh] w-[100vw] fixed top-0 left-0 bg-[#00000053] flex items-center justify-center z-50">
             <form enctype="multipart/form-data" onsubmit="createPost(event)"
                 class="bg-white relative shadow rounded-xl flex flex-col gap-2 p-5 createPost w-[400px]">
                 <input type="hidden" name="post_id" class="post_id">
@@ -113,11 +113,12 @@
                                     class="sharePost cursor-pointer">
                                     <i class="ri-share-fill"></i> Share
                                 </small>
-                                @if (Auth::user()->id == $post['user_id'])
+                                @if (Auth::user()?->id == $post['user_id'])
                                     <small onclick="editPost({{ $post['id'] }})" class="editPost cursor-pointer">
                                         <i class="ri-pencil-fill"></i> Edit
                                     </small>
-                                    <small class="deletePost cursor-pointer">
+                                    <small onclick="deletePost('{{ $post['id'] }}')"
+                                        class="deletePost cursor-pointer">
                                         <i class="ri-delete-bin-6-line"></i> Delete
                                     </small>
                                 @endif
@@ -142,6 +143,23 @@
 
     <script>
         function createPost(evt) {
+            if ('{{ !Auth::check() }}') {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true,
+                    icon: 'info',
+                    title: 'You Need to login!',
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                }).then(() => {
+                    window.open('/login', '_self')
+                });
+            }
             evt.preventDefault()
             let data = $('.createPost')[0];
             data = new FormData(data)
@@ -207,6 +225,7 @@
             console.log($('.previmg')[0]);
         })
         $('.closeCreatePost').click(function() {
+            $('.post_id').val('')
             $('.createPost')[0].reset()
             $('.createPostTitleAndBtn').text('Create Post')
             $('.previmg').attr('src', '')
@@ -274,6 +293,83 @@
             } else {
                 $('.post_wrapper')[0].classList.add('hidden')
             }
+        }
+        function deletePost(post_id) {
+            $('.actionBtnWrapper').each(function() {
+                this.classList.add('hidden');
+            })
+            $('.actionShowBtn').each(function() {
+                this.classList.add('ri-more-2-line')
+                this.classList.remove('ri-close-large-line')
+            })
+            if (!post_id) {
+                return Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true,
+                    icon: 'info',
+                    title: 'Post Id is required!',
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
+            }
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '{{ route('delete.post') }}',
+                        type: 'GET',
+                        data: {
+                            post_id: post_id
+                        },
+                        success: function(res) {
+                            if (res.success) {
+                                Swal.fire({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    icon: 'success',
+                                    title: res.message,
+                                })
+                            } else {
+                                Swal.fire({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    icon: 'info',
+                                    title: res.message,
+                                })
+                            }
+                        },
+                        error: function(err) {
+
+                        }
+                    })
+                } else {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        icon: 'info',
+                        title: "Post Could'nt delete!",
+                    })
+                }
+            })
+
         }
     </script>
 
