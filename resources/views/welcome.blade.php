@@ -95,7 +95,9 @@
             </form>
         </div>
         <div class="allPosts px-3 flex gap-3 items-center flex-wrap">
-            @foreach ($posts as $post)
+            
+            @if(count($posts) >  0)
+                @foreach ($posts as $post)
                 <div class="card h-min-[400px] p-2 w-[300px] shadow rounded-2xl ">
                     <div class="pt-2 flex gap-2 items-center justify-between mb-2">
                         <div class="flex gap-2 items-center">
@@ -138,6 +140,10 @@
                     </div>
                 </div>
             @endforeach
+            @else 
+                <h2>No Post Found yet!</h2>
+            @endif
+           
         </div>
     </div>
 
