@@ -21,7 +21,7 @@ class UserController extends Controller
     }
     function showHomePage(){
         $user = Auth::user()?->except('password');
-        $allPost = Posts::where('deleted_at', null)->latest()->offset(0)->limit(5)->get();
+        $allPost = Posts::where('deleted_at', null)->latest()->offset(0)->limit(100)->get();
         return view('welcome',['user' => $user ?? [], 'posts' => $allPost ?? []]);
     }
     function RegisterUser(Request $request){

@@ -32,7 +32,7 @@
                 toast: true,
                 position: 'top-end',
                 showConfirmButton: false,
-                timer: 3000,
+                timer: 2000,
                 timerProgressBar: true,
                 icon: 'success',
                 title: 'Logged in Succesfull!',
@@ -45,6 +45,7 @@
     @endif
 
     <div class="">
+        {{-- navbar  --}}
         <div class="row w-full h-[90px] flex justify-between p-2 items-center fixed top-0 left-0">
             <div
                 class="closeCreatePost bg-purple-600 rounded-2xl h-[40px] w-[150px] flex justify-center items-center text-white cursor-pointer gap-2 text-sm">
@@ -95,18 +96,22 @@
             </form>
         </div>
 
-        <div class="allPosts px-3 flex items-center gap-3 flex-col py-4">
+        <div class="allPosts z-10 relative px-3 flex items-center gap-5 flex-col py-4">
             @if (count($posts) > 0)
                 @foreach ($posts as $post)
-                    <div class="card h-min-[400px] p-2 w-[300px] shadow rounded-2xl ">
+                    <div class="card h-min-[400px] p-2 w-[350px] shadow rounded-2xl ">
                         <div class="pt-2 flex gap-2 items-center justify-between mb-2">
                             <div class="flex gap-2 items-center">
                                 <i class="ri-user-line text-3xl"></i>
                                 <div>
-                                    <p class="leading-2">{{ $post->user?->name ?? 'Known User' }}</p>
-                                    <small>{{ \Carbon\Carbon::parse($post['created_at'])->timezone('Asia/Kolkata')->format('F j, Y g:i A') }}</small>
+                                    <p class="leading-4 text-[13px]">{{ $post->user?->name ?? 'Known User' }}</p>
+                                    <p class="text-[12px]">{{ \Carbon\Carbon::parse($post['created_at'])->timezone('Asia/Kolkata')->format('F j, Y g:i A') }}</p>
                                 </div>
                             </div>
+                            
+                           <div class="flex gap-2">
+                            <button onclick="follow(this)" isFollow='0' class="bg-purple-600 text-white px-4 py-2 rounded-xl text-[12px] followBtn cursor-pointer">Follow</button>
+                            {{-- edit and delete post btns  --}}
                             <div class="relative">
                                 <i class="ri-more-2-line cursor-pointer actionShowBtn"></i>
                                 <div
@@ -126,17 +131,16 @@
                                     @endif
                                 </div>
                             </div>
+                           </div>
                         </div>
                         <div class="w-full flex justify-center">
                             <img class="w-auto h-[300px] object-cover rounded-2xl" src="/storage/{{ $post['image'] }}"
                                 alt="">
                         </div>
-
                         <div class="flex flex-col justify-between mt-2">
                             <div>
-                                <p class="leading-5 mt-2">{{ $post['deps'] }}</p>
+                                <p class="leading-5 mt-2 text-[13px]">{{ $post['deps'] }}</p>
                             </div>
-
                         </div>
                     </div>
                 @endforeach
@@ -378,6 +382,17 @@
                 }
             })
 
+        }
+        function follow(el){     
+            let isFollow = el.getAttribute('isFollow') 
+                  
+          if(isFollow == 0){
+            el.innerText = 'Following'
+            el.setAttribute('isFollow', 1)
+          }else {
+            el.innerText = 'Follow'
+            el.setAttribute('isFollow', 0)
+          }
         }
     </script>
 
