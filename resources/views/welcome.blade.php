@@ -46,7 +46,7 @@
 
     <div class="">
         {{-- navbar  --}}
-        <div class="row w-full h-[90px] flex justify-between p-2 items-center fixed top-0 left-0">
+        <div class="row w-full h-[90px] flex justify-between p-2 items-center  top-0 left-0">
             <div
                 class="closeCreatePost bg-purple-600 rounded-2xl h-[40px] w-[150px] flex justify-center items-center text-white cursor-pointer gap-2 text-sm">
                 <i class="ri-quill-pen-ai-line"></i> Create Post

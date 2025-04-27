@@ -134,7 +134,6 @@ class UserController extends Controller
         $imagePath = $request->file('image')->store('image', 'public');
         if(!$imagePath){
             return response()->json([
-                'error' => $imagePath->error()->first(),
                 'message' => "Image could'nt upload",
                 'success' => false
             ]);
@@ -150,7 +149,6 @@ class UserController extends Controller
 
         if(!$post){
             return response()->json([
-                'error' => $imageUrl->error()->first(),
                 'message' => "Post Failed!",
                 'success' => false,
                 'user_id' => $user_Id
