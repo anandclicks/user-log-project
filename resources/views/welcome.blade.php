@@ -97,7 +97,7 @@
                                 <i class="ri-user-line text-2xl text-gray-600"></i>
                                 <div>
                                     <p class="text-sm font-medium text-gray-800">{{ $post->user?->name ?? 'Known User' }}</p>
-                                    <p class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($post['created_at'])->timezone('Asia/Kolkata')->format('F j, Y g:i A') }}</p>
+                                    <p class="text-xs text-gray-500 text-[10px]">{{ \Carbon\Carbon::parse($post['created_at'])->timezone('Asia/Kolkata')->format('F j, Y g:i A') }}</p>
                                 </div>
                             </div>
                             <div class="flex items-center gap-2">
