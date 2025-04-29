@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.min.css" rel="stylesheet">
 </head>
-<body class="min-h-screen bg-gradient-to-br from-purple-100 to-indigo-200 flex items-center justify-center p-4">
+<body class="min-h-screen  flex items-center justify-center p-4">
     <div class="flex flex-col md:flex-row max-w-4xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden">
         <div class="w-full md:w-1/2 p-8 flex items-center justify-center">
             <form onsubmit="registerUser(event)" class="registerForm flex flex-col gap-4 w-full max-w-md">

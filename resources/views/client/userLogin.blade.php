@@ -10,7 +10,7 @@
         integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-purple-100 to-indigo-200 flex items-center justify-center p-4">
+<body class="min-h-screen flex items-center justify-center p-4">
     <div class="flex flex-col md:flex-row max-w-4xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden">
         <div class="w-full md:w-1/2 p-8 flex items-center justify-center">
             <form onsubmit="loginUser(event)" class="loginForm flex flex-col gap-4 w-full max-w-md">

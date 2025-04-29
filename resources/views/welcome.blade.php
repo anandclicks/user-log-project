@@ -24,7 +24,7 @@
         }
     </style>
 </head>
-<body class="min-h-screen from-purple-100 to-indigo-200">
+<body class="min-h-screen ">
     @if (session('success'))
         <script>
             Swal.fire({
@@ -88,11 +88,11 @@
         </div>
 
         <!-- Posts Section -->
-        <div class="allPosts z-10 relative px-4 py-6 flex flex-col items-center gap-6 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:gap-4 max-w-7xl mx-auto">
+        <div class="allPosts z-10 relative px-2 py-6 flex flex-col items-center gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:gap-4 max-w-7xl mx-auto">
             @if (count($posts) > 0)
                 @foreach ($posts as $post)
-                    <div class="card w-full max-w-sm bg-white p-4 shadow-lg rounded-2xl">
-                        <div class="flex items-center justify-between mb-3">
+                    <div class="card w-full sm:max-w-lg bg-white p-4 shadow-lg rounded-2xl">
+                        <div class="flex items-center justify-between mb-3 gap-5">
                             <div class="flex items-center gap-2">
                                 <i class="ri-user-line text-2xl text-gray-600"></i>
                                 <div>
@@ -101,7 +101,7 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap-2">
-                                <button onclick="follow(this)" isFollow='0' class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded-lg text-xs font-medium followBtn cursor-pointer transition duration-200">Follow</button>
+                                <button onclick="follow(this)" isFollow='0' class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg text-xs font-medium followBtn cursor-pointer transition duration-200 min-w-[85px] text-center">Follow</button>
                                 <!-- Action Menu -->
                                 <div class="relative">
                                     <i class="ri-more-2-line cursor-pointer actionShowBtn text-lg text-gray-600 hover:text-gray-800"></i>
@@ -123,7 +123,7 @@
                             </div>
                         </div>
                         <div class="w-full flex justify-center">
-                            <img class="w-full h-64 object-cover rounded-xl" src="/storage/{{ $post['image'] }}" alt="Post image">
+                            <img class="w-full h-72 object-cover rounded-xl" src="/storage/{{ $post['image'] }}" alt="Post image">
                         </div>
                         <div class="mt-3">
                             <p class="text-sm text-gray-700 leading-relaxed">{{ $post['deps'] }}</p>
