@@ -16,12 +16,12 @@ class SendEmail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct($email, $name, $pg, $number)
+    public function __construct($name, $number, $pg, $sharing_type)
     {
-        $this->email = $email;
         $this->name = $name;
-        $this->pg = $pg;
         $this->number = $number;
+        $this->pg = $pg;
+        $this->sharing_type = $sharing_type;
     }
 
     /**
@@ -42,10 +42,10 @@ class SendEmail extends Mailable
         return new Content(
             view: 'emailTemp',
             with : [
-                'email' => $this->email,
-                 'name' =>$this->name,
+                'name' =>$this->name,
+                'number' =>$this->number,
                  'pg' =>$this->pg,
-                 'number' =>$this->number,
+                 'sharing_type' =>$this->sharing_type,
              ]
         );
     }

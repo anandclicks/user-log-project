@@ -12,7 +12,12 @@
             box-sizing: border-box;
             font-family: 'Arial', sans-serif;
         }
-
+        .p-2 {
+            padding: 10px !important;
+        }
+        a {
+            color: #000 !important;
+        }
         body {
             background-color: #f3f4f6;
             padding: 10px;
@@ -24,7 +29,7 @@
             background: #ffffff;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            box-shadow: 0px 0px 16px 0px #00000069 !important;
         }
 
         .navbar {
@@ -41,6 +46,8 @@
             height: 38px;
             margin-right: 10px;
             border-radius: 50%;
+            background-image: url('https://nh2.vercel.app/images/logo.jpg') !important;
+            background-size: cover !important;
             background: #ffffff;
             display: flex;
             align-items: center;
@@ -57,13 +64,13 @@
         }
 
         .company-name {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 600;
             letter-spacing: 0.3px;
         }
 
         .content {
-            padding: 25px;
+            padding: 25px 0px 25px 0px !important;
             text-align: center;
         }
 
@@ -80,7 +87,7 @@
             padding: 12px;
             border-radius: 8px;
             margin: 0 auto;
-            max-width: 320px;
+            max-width: 400px;
             border: 1px solid #dcfce7;
         }
 
@@ -95,9 +102,9 @@
         }
 
         .content strong {
-            color: #14532d;
+            color: #14532d; 
             font-weight: 600;
-            min-width: 60px;
+            min-width: 92px;
             text-align: left;
         }
 
@@ -106,7 +113,7 @@
             margin-top: 15px;
             padding: 8px 22px;
             background: linear-gradient(90deg, #15803d, #22c55e);
-            color: #ffffff;
+            color: #ffffff !important;
             text-decoration: none;
             font-size: 14px;
             font-weight: 600;
@@ -130,35 +137,41 @@
         }
 
         .footer a {
-            color: #15803d;
+            color: #15803d !important;
             text-decoration: none;
             font-weight: 500;
         }
 
         .footer a:hover {
-            color: #166534;
+            color: #166534 !important;
+        }
+        span {
+            color: #000 !important;
+            padding: 0px 0px 0px 10px !important;
         }
     </style>
 </head>
 <body>
+   <div class="p-2">
     <div class="container">
         <div class="navbar">
-            <div class="logo">A</div>
-            <div class="company-name">Anand Clicks</div>
+            <div class="logo"></div>
+            <div class="company-name">NH2 Stays</div>
         </div>
         <div class="content">
             <div class="heading">A Client is Interested in Contacting You!</div>
             <div class="info-card">
-                <p><strong>Name:</strong> <span>{{$email}}</span></p>
-                <p><strong>Email:</strong> <span>{{$name}}</span></p>
+                <p><strong>Name:</strong> <span>{{$name}}</span></p>
                 <p><strong>Number:</strong> <span>+91{{$number}}</span></p>
                 <p><strong>PG:</strong> <span>{{$pg}}</span></p>
+                <p><strong>Sharing Type:</strong> <span>{{$sharing_type}}</span></p>
             </div>
             <a href="tel:{{ $number }}" class="cta-button">Call Now</a>
         </div>
         <div class="footer">
-            © 2025 Anand Clicks. All rights reserved. | <a href="#">Contact Us</a>
+            © 2025 <a href="https://tanusadigital.in/">Tanusa Digital</a>. All rights reserved. | <a href="https://tanusadigital.in/">Contact Us</a>
         </div>
     </div>
+   </div>
 </body>
 </html>

@@ -4,8 +4,18 @@
 <form id="emailForm">
     @csrf
     <input type="text" name="name" placeholder="Your Name">
-    <input type="email" name="email" placeholder="Your Email">
-    <input type="number" name="number" placeholder="Enter Number">
+    <input type="number" name="number" placeholder="Your number">
+    <select name="pg">
+        <option value="NOD101">NH2NOD101</option>
+        <option value="NOD416">NH2NOD416</option>
+        <option value="NOD438">NH2NOD438</option>
+        <option value="NOD401">NH2NOD401</option>
+    </select>
+    <select name="sharing_type">
+        <option value="Single Sharing">Single Sharing</option>
+        <option value="Double Sharing">Double Sharing</option>
+        <option value="Triple Sharing">Triple Sharing</option>
+    </select>
     <input type="submit" value="Submit">
 </form>
 
