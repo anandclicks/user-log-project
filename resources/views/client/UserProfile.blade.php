@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Social Media Page</title>
+    <title>Profile Page</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
@@ -24,7 +24,7 @@
         }
     </style>
 </head>
-<body class="min-h-screen ">
+<body class="min-h-screen">
     @if (session('success'))
         <script>
             Swal.fire({
@@ -34,7 +34,7 @@
                 timer: 2000,
                 timerProgressBar: true,
                 icon: 'success',
-                title: 'Logged in Succesfull!',
+                title: 'Logged in Successfully!',
                 didOpen: (toast) => {
                     toast.addEventListener('mouseenter', Swal.stopTimer)
                     toast.addEventListener('mouseleave', Swal.resumeTimer)
@@ -44,12 +44,10 @@
     @endif
 
     <div class="flex flex-col min-h-screen">
-        {{-- logut btn  --}}
-      @if(!empty($user))
+        <!-- Logout Button -->
         <a href="/logout" class="z-999 fixed bottom-0 right-0 m-7 cursor-pointer bg-red-600 px-3 py-2 text-sm rounded-xl text-white"><i class="ri-logout-circle-r-line"></i> Logout</a>
-      @endif
         <!-- Navbar -->
-        <nav class="w-full h-[80px] flex justify-between items-center px-4 md:px-8 bg-white shadow-md sticky top-0 z-40">
+         <nav class="w-full h-[80px] flex justify-between items-center px-4 md:px-8 bg-white shadow-md sticky top-0 z-40">
             <a href="/" class="text-xl font-bold"><span class="text-purple-600">Clicks</span> World!!</a>
            <div class="flex gap-2 items-center">
              <button class="cursor-pointer closeCreatePost bg-purple-600 hover:bg-purple-700 text-white rounded-xl h-10 px-4 flex items-center gap-2 text-sm font-semibold transition duration-200">
@@ -60,8 +58,8 @@
                     src="https://cdn.vectorstock.com/i/500p/62/34/user-profile-icon-anonymous-person-symbol-blank-vector-53216234.jpg"
                     alt="User profile">
                 <div>
-                    @if (!empty($user))
-                        <h2 class="text-sm font-semibold text-gray-800">Hello, <br><b class="text-purple-500">{{ $user['name'] }}</b></h2>
+                    @if (Auth::user())
+                        <h2 class="text-sm font-semibold text-gray-800">Hello, <br><b class="text-purple-500">{{ Auth::user()?->name }}</b></h2>
                     @else
                         <p><a href="{{ route('login.view') }}" class="text-purple-600 hover:text-purple-800 font-medium text-sm">Login Account</a></p>
                     @endif
@@ -94,22 +92,34 @@
             </form>
         </div>
 
+        <!-- Profile Section -->
+        <div class="profile_section z-10 relative px-4 py-6 flex flex-col items-center gap-6 max-w-7xl mx-auto">
+            <div class="bg-white shadow-lg rounded-2xl p-6 w-full max-w-md flex flex-col items-center gap-4">
+                <img class="h-24 w-24 rounded-full object-cover"
+                    src="https://cdn.vectorstock.com/i/500p/62/34/user-profile-icon-anonymous-person-symbol-blank-vector-53216234.jpg"
+                    alt="User profile">
+                <div class="text-center">
+                    <h2 class="text-xl font-bold text-gray-800">{{ $user['name'] ?? 'Guest User' }}</h2>
+                    <p class="text-sm text-gray-600">{{ $user['email'] ?? 'No email provided' }}</p>
+                    <p class="text-sm text-gray-600">Total Posts: <span class="font-semibold text-purple-600">{{ count($posts) }}</span></p>
+                </div>
+            </div>
+        </div>
+
         <!-- Posts Section -->
         <div class="allPosts z-10 relative px-2 py-6 flex flex-col items-center gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:gap-4 max-w-7xl mx-auto">
             @if (count($posts) > 0)
                 @foreach ($posts as $post)
-                    <div class="card w-full sm:min-w-[300px] bg-white p-4 shadow-lg rounded-2xl">
+                    <div class="card w-full sm:max-w-lg bg-white p-4 shadow-lg rounded-2xl">
                         <div class="flex items-center justify-between mb-3 gap-5">
                             <div class="flex items-center gap-2">
                                 <i class="ri-user-line text-2xl text-gray-600"></i>
-                                <a  href="{{route('userProfile', encrypt($post->user?->id))}}">
+                                <div>
                                     <p class="text-sm font-medium text-gray-800">{{ $post->user?->name ?? 'Known User' }}</p>
                                     <p class="text-xs text-gray-500 text-[10px]">{{ \Carbon\Carbon::parse($post['created_at'])->timezone('Asia/Kolkata')->format('F j, Y g:i A') }}</p>
-                                </a>
+                                </div>
                             </div>
                             <div class="flex items-center gap-2">
-                                {{-- <button class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg text-xs font-medium followBtn cursor-pointer transition duration-200 min-w-[85px] text-center">Follow</button> --}}
-                                <!-- Action Menu -->
                                 <div class="relative">
                                     <i class="ri-more-2-line cursor-pointer actionShowBtn text-lg text-gray-600 hover:text-gray-800"></i>
                                     <div class="absolute actionBtnWrapper top-6 right-0 w-28 bg-white shadow-lg rounded-xl p-3 flex flex-col gap-2 text-sm prevent-select hidden">
@@ -260,7 +270,7 @@
                     showConfirmButton: false,
                     timer: 2000,
                     icon: 'success',
-                    title: 'Url Cpoied!',
+                    title: 'Url Copied!',
                 })
             );
         })
@@ -367,12 +377,11 @@
                         showConfirmButton: false,
                         timer: 2000,
                         icon: 'info',
-                        title: "Post Could'nt delete!",
+                        title: "Post Couldn't delete!",
                     })
                 }
             })
         }
-     
     </script>
 </body>
 </html>

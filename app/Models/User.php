@@ -4,6 +4,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model; 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Models\Posts;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -14,8 +15,9 @@ class User extends Authenticatable
         'password',
     ];
 
-    function user(){
-      return $this->belongsTo(Posts::class);
+    function post(): HasMany
+    {
+      return $this->hasMany(Posts::class);
     }
 }
 
