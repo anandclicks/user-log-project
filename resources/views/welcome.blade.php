@@ -101,7 +101,7 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap-2">
-                                <button onclick="follow(this)" isFollow='0' class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg text-xs font-medium followBtn cursor-pointer transition duration-200 min-w-[85px] text-center">Follow</button>
+                                {{-- <button class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg text-xs font-medium followBtn cursor-pointer transition duration-200 min-w-[85px] text-center">Follow</button> --}}
                                 <!-- Action Menu -->
                                 <div class="relative">
                                     <i class="ri-more-2-line cursor-pointer actionShowBtn text-lg text-gray-600 hover:text-gray-800"></i>
@@ -360,16 +360,7 @@
                 }
             })
         }
-        function follow(el){     
-            let isFollow = el.getAttribute('isFollow') 
-            if(isFollow == 0){
-                el.innerText = 'Following'
-                el.setAttribute('isFollow', 1)
-            } else {
-                el.innerText = 'Follow'
-                el.setAttribute('isFollow', 0)
-            }
-        }
+     
     </script>
 </body>
 </html>
