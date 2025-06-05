@@ -45,14 +45,18 @@
 
     <div class="flex flex-col min-h-screen">
         <!-- Logout Button -->
-        <a href="/logout" class="z-999 fixed bottom-0 right-0 m-7 cursor-pointer bg-red-600 px-3 py-2 text-sm rounded-xl text-white"><i class="ri-logout-circle-r-line"></i> Logout</a>
+          @if(Auth::user())
+            <a href="/logout" class="z-999 fixed bottom-0 right-0 m-7 cursor-pointer bg-red-600 px-3 py-2 text-sm rounded-xl text-white"><i class="ri-logout-circle-r-line"></i> Logout</a>
+            @endif
         <!-- Navbar -->
          <nav class="w-full h-[80px] flex justify-between items-center px-4 md:px-8 bg-white shadow-md sticky top-0 z-40">
             <a href="/" class="text-xl font-bold"><span class="text-purple-600">Clicks</span> World!!</a>
            <div class="flex gap-2 items-center">
-             <button class="cursor-pointer closeCreatePost bg-purple-600 hover:bg-purple-700 text-white rounded-xl h-10 px-4 flex items-center gap-2 text-sm font-semibold transition duration-200">
+            @if(Auth::user())
+                 <button class="cursor-pointer closeCreatePost bg-purple-600 hover:bg-purple-700 text-white rounded-xl h-10 px-4 flex items-center gap-2 text-sm font-semibold transition duration-200">
                 <i class="ri-quill-pen-ai-line"></i> Create Post
             </button>
+            @endif
             <div class="user_card w-[180px] md:w-[200px] h-14 bg-white shadow rounded-xl flex items-center gap-3 px-3">
                 <img class="h-10 w-10 rounded-full object-cover"
                     src="https://cdn.vectorstock.com/i/500p/62/34/user-profile-icon-anonymous-person-symbol-blank-vector-53216234.jpg"
