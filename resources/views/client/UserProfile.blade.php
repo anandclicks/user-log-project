@@ -110,7 +110,7 @@
         <div class="allPosts z-10 relative px-2 py-6 flex flex-col items-center gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:gap-4 max-w-7xl mx-auto">
             @if (count($posts) > 0)
                 @foreach ($posts as $post)
-                    <div class="card w-full sm:max-w-lg bg-white p-4 shadow-lg rounded-2xl">
+                    <div class="card w-full sm:min-w-[300px] bg-white p-4 shadow-lg rounded-2xl">
                         <div class="flex items-center justify-between mb-3 gap-5">
                             <div class="flex items-center gap-2">
                                 <i class="ri-user-line text-2xl text-gray-600"></i>
