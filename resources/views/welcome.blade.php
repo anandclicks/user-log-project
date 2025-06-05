@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,6 +18,7 @@
         * {
             font-family: 'Instrument Sans', Arial, Helvetica, sans-serif;
         }
+
         .prevent-select {
             -webkit-user-select: none;
             -ms-user-select: none;
@@ -24,6 +26,7 @@
         }
     </style>
 </head>
+
 <body class="min-h-screen ">
     @if (session('success'))
         <script>
@@ -45,8 +48,10 @@
 
     <div class="flex flex-col min-h-screen">
         <!-- Navbar -->
-        <nav class="w-full h-[80px] flex justify-between items-center px-4 md:px-8 bg-white shadow-md sticky top-0 z-40">
-            <button class="closeCreatePost bg-purple-600 hover:bg-purple-700 text-white rounded-xl h-10 px-4 flex items-center gap-2 text-sm font-semibold transition duration-200">
+        <nav
+            class="w-full h-[80px] flex justify-between items-center px-4 md:px-8 bg-white shadow-md sticky top-0 z-40">
+            <button
+                class="closeCreatePost bg-purple-600 hover:bg-purple-700 text-white rounded-xl h-10 px-4 flex items-center gap-2 text-sm font-semibold transition duration-200">
                 <i class="ri-quill-pen-ai-line"></i> Create Post
             </button>
             <div class="user_card w-[180px] md:w-[200px] h-14 bg-white shadow rounded-xl flex items-center gap-3 px-3">
@@ -55,24 +60,29 @@
                     alt="User profile">
                 <div>
                     @if (!empty($user))
-                        <h2 class="text-sm font-semibold text-gray-800">Hello, <br><b class="text-purple-500">{{ $user['name'] }}</b></h2>
+                        <h2 class="text-sm font-semibold text-gray-800">Hello, <br><b
+                                class="text-purple-500">{{ $user['name'] }}</b></h2>
                     @else
-                        <p><a href="{{ route('login.view') }}" class="text-purple-600 hover:text-purple-800 font-medium text-sm">Login Account</a></p>
+                        <p><a href="{{ route('login.view') }}"
+                                class="text-purple-600 hover:text-purple-800 font-medium text-sm">Login Account</a></p>
                     @endif
                 </div>
             </div>
         </nav>
 
         <!-- Create Post Modal -->
-        <div class="hidden post_wrapper h-screen w-screen fixed top-0 left-0 bg-black/50 flex items-center justify-center z-50">
+        <div
+            class="hidden post_wrapper h-screen w-screen fixed top-0 left-0 bg-black/50 flex items-center justify-center z-50">
             <form enctype="multipart/form-data" onsubmit="createPost(event)"
                 class="bg-white relative shadow-2xl rounded-xl flex flex-col gap-4 p-6 createPost w-full max-w-md">
                 <input type="hidden" name="post_id" class="post_id">
-                <i class="ri-close-large-line closeCreatePost absolute top-4 right-4 text-xl cursor-pointer text-gray-600 hover:text-gray-800"></i>
+                <i
+                    class="ri-close-large-line closeCreatePost absolute top-4 right-4 text-xl cursor-pointer text-gray-600 hover:text-gray-800"></i>
                 <h1 class="text-2xl font-bold text-gray-800 createPostTitleAndBtn">Create Post</h1>
                 @csrf
                 <!-- Image Preview -->
-                <div class="h-48 w-full bg-gray-100 rounded-xl relative overflow-hidden flex items-center justify-center">
+                <div
+                    class="h-48 w-full bg-gray-100 rounded-xl relative overflow-hidden flex items-center justify-center">
                     <input type="file" accept="image/*"
                         class="imageInput absolute cursor-pointer top-0 left-0 opacity-0 h-full w-full z-30"
                         name="image">
@@ -88,33 +98,42 @@
         </div>
 
         <!-- Posts Section -->
-        <div class="allPosts z-10 relative px-2 py-6 flex flex-col items-center gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:gap-4 max-w-7xl mx-auto">
+        <div
+            class="allPosts z-10 relative px-2 py-6 flex flex-col items-center gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:gap-4 max-w-7xl mx-auto">
             @if (count($posts) > 0)
                 @foreach ($posts as $post)
-                    <div class="card w-full sm:max-w-lg bg-white p-4 shadow-lg rounded-2xl">
+                    <div class="card w-full sm:max-w-lg bg-white p-4 shadow-lg rounded-2xl post{{ $post['id'] }}">
                         <div class="flex items-center justify-between mb-3 gap-5">
                             <div class="flex items-center gap-2">
                                 <i class="ri-user-line text-2xl text-gray-600"></i>
                                 <div>
-                                    <p class="text-sm font-medium text-gray-800">{{ $post->user?->name ?? 'Known User' }}</p>
-                                    <p class="text-xs text-gray-500 text-[10px]">{{ \Carbon\Carbon::parse($post['created_at'])->timezone('Asia/Kolkata')->format('F j, Y g:i A') }}</p>
+                                    <p class="text-sm font-medium text-gray-800">
+                                        {{ $post->user?->name ?? 'Known User' }}</p>
+                                    <p class="text-xs text-gray-500 text-[10px]">
+                                        {{ \Carbon\Carbon::parse($post['created_at'])->timezone('Asia/Kolkata')->format('F j, Y g:i A') }}
+                                    </p>
                                 </div>
                             </div>
                             <div class="flex items-center gap-2">
-                                <button onclick="follow(this)" isFollow='0' class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg text-xs font-medium followBtn cursor-pointer transition duration-200 min-w-[85px] text-center">Follow</button>
+                                <button onclick="follow(this)" isFollow='0'
+                                    class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg text-xs font-medium followBtn cursor-pointer transition duration-200 min-w-[85px] text-center">Follow</button>
                                 <!-- Action Menu -->
                                 <div class="relative">
-                                    <i class="ri-more-2-line cursor-pointer actionShowBtn text-lg text-gray-600 hover:text-gray-800"></i>
-                                    <div class="absolute actionBtnWrapper top-6 right-0 w-28 bg-white shadow-lg rounded-xl p-3 flex flex-col gap-2 text-sm prevent-select hidden">
+                                    <i
+                                        class="ri-more-2-line cursor-pointer actionShowBtn text-lg text-gray-600 hover:text-gray-800"></i>
+                                    <div
+                                        class="absolute actionBtnWrapper top-6 right-0 w-28 bg-white shadow-lg rounded-xl p-3 flex flex-col gap-2 text-sm prevent-select hidden">
                                         <small copyUrl="{{ URL::to('/posts/' . encrypt($post['id'])) }}"
                                             class="sharePost cursor-pointer flex items-center gap-1 text-gray-700 hover:text-purple-600">
                                             <i class="ri-share-fill"></i> Share
                                         </small>
                                         @if (Auth::user()?->id == $post['user_id'])
-                                            <small onclick="editPost({{ $post['id'] }})" class="editPost cursor-pointer flex items-center gap-1 text-gray-700 hover:text-purple-600">
+                                            <small onclick="editPost({{ $post['id'] }})"
+                                                class="editPost cursor-pointer flex items-center gap-1 text-gray-700 hover:text-purple-600">
                                                 <i class="ri-pencil-fill"></i> Edit
                                             </small>
-                                            <small onclick="deletePost('{{ $post['id'] }}')" class="deletePost cursor-pointer flex items-center gap-1 text-gray-700 hover:text-purple-600">
+                                            <small onclick="deletePost('{{ $post['id'] }}')"
+                                                class="deletePost cursor-pointer flex items-center gap-1 text-gray-700 hover:text-purple-600">
                                                 <i class="ri-delete-bin-6-line"></i> Delete
                                             </small>
                                         @endif
@@ -123,7 +142,8 @@
                             </div>
                         </div>
                         <div class="w-full flex justify-center">
-                            <img class="w-full h-72 object-cover rounded-xl" src="/storage/{{ $post['image'] }}" alt="Post image">
+                            <img class="w-full h-72 object-cover rounded-xl" src="/storage/{{ $post['image'] }}"
+                                alt="Post image">
                         </div>
                         <div class="mt-3">
                             <p class="text-sm text-gray-700 leading-relaxed">{{ $post['deps'] }}</p>
@@ -256,6 +276,7 @@
                 })
             );
         })
+
         function editPost(post_id) {
             $('.createPostTitleAndBtn').text('Edit Post')
             $.ajax({
@@ -286,6 +307,7 @@
                 $('.post_wrapper')[0].classList.add('hidden')
             }
         }
+
         function deletePost(post_id) {
             $('.actionBtnWrapper').each(function() {
                 this.classList.add('hidden');
@@ -335,6 +357,9 @@
                                     icon: 'success',
                                     title: res.message,
                                 })
+
+                                let postForDelete = $(`.post${post_id}`)[0]
+                                postForDelete.remove()
                             } else {
                                 Swal.fire({
                                     toast: true,
@@ -360,9 +385,10 @@
                 }
             })
         }
-        function follow(el){     
-            let isFollow = el.getAttribute('isFollow') 
-            if(isFollow == 0){
+
+        function follow(el) {
+            let isFollow = el.getAttribute('isFollow')
+            if (isFollow == 0) {
                 el.innerText = 'Following'
                 el.setAttribute('isFollow', 1)
             } else {
@@ -372,4 +398,5 @@
         }
     </script>
 </body>
+
 </html>
