@@ -10,21 +10,26 @@ use Illuminate\Support\Facades\Flash;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Posts;
+use Illuminate\Support\Facades\Crypt;
 
 class UserController extends Controller
 {
-    function registerPage(){
+    function registerPage()
+    {
         return view('client.userRegister');
     }
-    function loginPage(){
+    function loginPage()
+    {
         return view('client.userLogin');
     }
-    function showHomePage(){
+    function showHomePage()
+    {
         $user = Auth::user()?->except('password');
         $allPost = Posts::where('deleted_at', null)->latest()->offset(0)->limit(100)->get();
-        return view('welcome',['user' => $user ?? [], 'posts' => $allPost ?? []]);
+        return view('welcome', ['user' => $user ?? [], 'posts' => $allPost ?? []]);
     }
-    function RegisterUser(Request $request){
+    function RegisterUser(Request $request)
+    {
         $validate = Validator::make($request->all(), [
             'name'     => 'required|min:3',
             'email'    => 'required|email|unique:users,email,',
@@ -32,107 +37,107 @@ class UserController extends Controller
             'password' => 'required|min:4'
         ]);
 
-        if($validate->fails()){
-           return response()->json([
+        if ($validate->fails()) {
+            return response()->json([
                 'success' => false,
-                'message' =>$validate->errors()->first(),
+                'message' => $validate->errors()->first(),
             ]);
         }
 
         $data = $validate->validated();
         $data['password'] = Hash::make($data['password']);
         $status = User::create($data);
-        if($status){
+        if ($status) {
             return response()->json([
                 'success' => true,
                 'message' => 'User Registered!'
             ]);
-        }else {
+        } else {
             return response()->json([
                 'success' => false,
                 'message' => 'Failded To Reister User!',
             ]);
         }
-
     }
-    function LoginUser(Request $request){
-        $validate = Validator::make($request->all(),[
+    function LoginUser(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
             'email'    => 'required|exists:users,email',
             'password' => 'required|string'
         ]);
 
-        if($validate->fails()){
+        if ($validate->fails()) {
             return response()->json([
                 'success' => false,
                 'message' => $validate->errors()->first(),
-            ],200);
+            ], 200);
         }
 
-       $isUserExist = User::where('email', $request->email)->first();
-       if(!$isUserExist){
-        return response()->json([
-            'success' => false,
-            'message' => 'User Not Found!'
-        ],404);
-       }
+        $isUserExist = User::where('email', $request->email)->first();
+        if (!$isUserExist) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User Not Found!'
+            ], 404);
+        }
 
-       if(Hash::check($request->password, $isUserExist->password)){
-        Auth::login($isUserExist);
-        $request->session()->flash('success', 'Logged in Sucessful!');
-        return response()->json([
-            'success' => true,
-            'message' => 'User Loggedin!',
-            'user'    => $isUserExist->makeHidden('password'),
-        ],200);
-       }else {
-        return response()->json([
-            'success' => false,
-            'message' => 'Password Is Wrong!',
-        ],401);
-       }
-       
+        if (Hash::check($request->password, $isUserExist->password)) {
+            Auth::login($isUserExist);
+            $request->session()->flash('success', 'Logged in Sucessful!');
+            return response()->json([
+                'success' => true,
+                'message' => 'User Loggedin!',
+                'user'    => $isUserExist->makeHidden('password'),
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Password Is Wrong!',
+            ], 401);
+        }
     }
-    function CreatePost(Request $request){
-        if(!Auth::check()){
+    function CreatePost(Request $request)
+    {
+        if (!Auth::check()) {
             return  response()->json([
                 'message' => 'You need to Login!',
                 'success' => false
-            ],401);
+            ], 401);
         }
-        
+
 
         // checking for post exist or not 
         $post_id = $request?->post_id;
-        if($post_id){
+        if ($post_id) {
             $imagePath = $request->file('image')?->store('image', 'public');
             $want_to_update = Posts::find($post_id);
             $want_to_update->deps = $request->deps ?? $want_to_update->deps;
             $want_to_update->image = $imagePath ?? $want_to_update->image;
             $status = $want_to_update->save();
-            if($status){
+            if ($status) {
                 return response()->json([
                     'message' => 'Post Updated!',
                     'success' => true
-                ],200);
-            }else {
+                ], 200);
+            } else {
                 return response()->json([
                     'message' => 'Something is wrong!',
                     'error'  => $status,
-                ],500);
+                ], 500);
             }
         }
-        $validate = Validator::make($request->all(),[
+        $validate = Validator::make($request->all(), [
             'deps'  => 'required|string',
-            'image' => 'required|mimes:png,jpeg,jpg,webp',
+            'image' => 'required|mimes:png,jpeg,jpg,webp,avif',
         ]);
-        if($validate->fails()){
+        if ($validate->fails()) {
             return response()->json([
                 'message' => $validate->errors()->first(),
                 'status'  => false
             ]);
         }
         $imagePath = $request->file('image')->store('image', 'public');
-        if(!$imagePath){
+        if (!$imagePath) {
             return response()->json([
                 'message' => "Image could'nt upload",
                 'success' => false
@@ -147,7 +152,7 @@ class UserController extends Controller
         $post->user_id = $user_Id;
         $post->save();
 
-        if(!$post){
+        if (!$post) {
             return response()->json([
                 'message' => "Post Failed!",
                 'success' => false,
@@ -160,45 +165,70 @@ class UserController extends Controller
             'success' => true
         ]);
     }
-    function showExistingPostData(Request $request){
+    function showExistingPostData(Request $request)
+    {
         $id = $request->get('post_id');
         $status = Posts::find($id);
-        if($status){
+        if ($status) {
             return response()->json([
                 'status' => true,
                 'post' => $status,
             ]);
         }
     }
-    function deletePost(Request $request){
+    function deletePost(Request $request)
+    {
         $id = $request->get('post_id');
-        if(!$id){
+        if (!$id) {
             return response()->json([
                 'message' => 'Post id is Required!',
                 'success' => false
-            ],401);
+            ], 401);
         }
         $post = Posts::find($id);
-        if(!$post){
+        if (!$post) {
             return response()->json([
                 'message' => 'Post Not Found',
                 'status' => false
             ]);
         }
 
-          $post->deleted_at = Carbon::now();
-         $status = $post->save();
-        if($status){
+        $post->deleted_at = Carbon::now();
+        $status = $post->save();
+        if ($status) {
             return response()->json([
                 'message' => 'Post Deleted Successfully',
-                'success' =>true
-            ],200);
-        }else {
+                'success' => true
+            ], 200);
+        } else {
             return response()->json([
                 'message' => 'Failed to delete post!',
                 'error'  => $status->error,
-            ],500);
+            ], 500);
         }
-
+    }
+    function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->flash('success', 'Log out sucessfully');
+        return redirect('/login');
+    }
+    public function userProfile(Request $request, $userId)
+    {
+        if($userId){
+            $id = Crypt::decrypt($userId);
+            $user = User::find($id);
+        if (!$user) {
+            return response()->json([
+                'message' => "User not found"
+            ]);
+        }
+        $posts = $user->post;
+        return view('client.UserProfile', [
+            'user' => $user,
+            'posts' => $posts
+        ]);
+        }
+        
     }
 }

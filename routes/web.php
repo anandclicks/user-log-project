@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\EmailController;
 
 Route::get('/',                [UserController::class, 'showHomePage'])->name('/');
 Route::get('/register',        [UserController::class, 'registerPage'])->name("register.view");
@@ -11,3 +12,5 @@ Route::post('/login-user',     [UserController::class,  'LoginUser'])->name('use
 Route::post('/create-post',    [UserController::class,  'CreatePost'])->name('create.post');
 Route::get('/get-post',        [UserController::class,   'showExistingPostData'])->name('get.post');
 Route::get('/delete-post',     [UserController::class,   'deletePost'])->name('delete.post');
+Route::get('/logout',          [UserController::class,    'logout'])->name('logout');
+Route::get('/user/{userId}',   [UserController::class,    'userProfile'])->name('userProfile');
